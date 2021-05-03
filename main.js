@@ -5,6 +5,8 @@ const ITEM_FONT_SIZE = 13;
 const ITEM_PADDING = 2;
 const ITEM_HEIGHT = ITEM_FONT_SIZE + 2 * ITEM_PADDING;
 
+const OPEN_IN_SAFARI = $widget.inputValue === 'open-in-safari';
+
 (async function () {
     let items = null;
     let date = null;
@@ -55,12 +57,13 @@ const ITEM_HEIGHT = ITEM_FONT_SIZE + 2 * ITEM_PADDING;
                 (ctx.displaySize.height - 10) / ITEM_HEIGHT
             );
             const numColumn = ctx.family === 0 ? 1 : 2;
-            const openInSafari = $widget.inputValue;
             const link = 'https://s.weibo.com/top/summary';
             return {
                 type: 'zstack',
                 props: {
-                    widgetURL: openInSafari ? link : getLinkOpenedInJSBox(link),
+                    widgetURL: OPEN_IN_SAFARI
+                        ? link
+                        : getLinkOpenedInJSBox(link),
                 },
                 views: [
                     renderBackground(),
@@ -144,11 +147,10 @@ function renderItem(item) {
     const link = `https://s.weibo.com/weibo?q=%23${encodeURIComponent(
         item
     )}%23&Refer=top`;
-    const openInSafari = $widget.inputValue;
     return {
         type: 'text',
         props: {
-            link: openInSafari ? link : getLinkOpenedInJSBox(link),
+            link: OPEN_IN_SAFARI ? link : getLinkOpenedInJSBox(link),
             text: item,
             font: $font(ITEM_FONT_SIZE),
             color: $color('darkGray', 'white'),

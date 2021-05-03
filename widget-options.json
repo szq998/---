@@ -1,10 +1,10 @@
 [
     {
         "name": "点击后停留在JSBox",
-        "value": false
+        "value": "stay"
     },
     {
         "name": "点击后跳转到Safari",
-        "value": true
+        "value": "open-in-safari"
     }
 ]
