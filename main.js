@@ -90,7 +90,7 @@ function renderBackground() {
 }
 
 function renderUpdatingTime(date, family, isDarkMode) {
-    const opacity = isDarkMode ? 0.2 : 0.1;
+    const opacity = isDarkMode ? 0.15 : 0.08;
     return {
         type: 'vstack',
         views: [
@@ -104,9 +104,11 @@ function renderUpdatingTime(date, family, isDarkMode) {
             {
                 type: 'text',
                 props: {
-                    date,
-                    style: $widget.dateStyle.time,
-                    font: $font('bold', family === 0 ? 35 : 50),
+                    text:
+                        String(date.getHours()).padStart(2, '0') +
+                        ':' +
+                        String(date.getMinutes()).padStart(2, '0'),
+                    font: $font('bold', family === 0 ? 45 : 90),
                     opacity,
                 },
             },
