@@ -153,7 +153,7 @@ function renderItem(item) {
             link: OPEN_IN_SAFARI ? link : getLinkOpenedInJSBox(link),
             text: item,
             font: $font(ITEM_FONT_SIZE),
-            color: $color('darkGray', 'white'),
+            color: $color('darkGray', '#eee'),
             lineLimit: 1,
             frame: {
                 maxWidth: Infinity,
