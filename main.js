@@ -82,8 +82,8 @@ function renderBackgroundGradient() {
             startPoint: $point(0, 0),
             endPoint: $point(0, 1),
             colors: [
-                $color('#88E3F8', '#2F6C8C'),
-                $color('#58BFF5', '#1941A3'),
+                $color('#FAE5AF', '#A06B23'),
+                $color('#F3B757', '#9F7D28'),
             ],
         },
     };
