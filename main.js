@@ -37,7 +37,7 @@ const OPEN_IN_SAFARI = $widget.inputValue === 'open-in-safari';
             const {
                 entry: { info: items, date },
                 family,
-                isDarkMode,
+                displaySize,
             } = ctx;
 
             if (date === null) {
@@ -54,9 +54,9 @@ const OPEN_IN_SAFARI = $widget.inputValue === 'open-in-safari';
             }
 
             const itemPerColumn = Math.floor(
-                (ctx.displaySize.height - 10) / ITEM_HEIGHT
+                (displaySize.height - 10) / ITEM_HEIGHT
             );
-            const numColumn = ctx.family === 0 ? 1 : 2;
+            const numColumn = family === 0 ? 1 : 2;
             const link = 'https://s.weibo.com/top/summary';
             return {
                 type: 'zstack',
@@ -67,7 +67,7 @@ const OPEN_IN_SAFARI = $widget.inputValue === 'open-in-safari';
                 },
                 views: [
                     renderBackground(),
-                    renderUpdatingTime(date, family, isDarkMode),
+                    renderUpdatingTime(date, ctx),
                     renderHotNews(items, itemPerColumn, numColumn),
                 ],
             };
@@ -89,7 +89,7 @@ function renderBackground() {
     };
 }
 
-function renderUpdatingTime(date, family, isDarkMode) {
+function renderUpdatingTime(date, { family, isDarkMode }) {
     const opacity = isDarkMode ? 0.15 : 0.08;
     return {
         type: 'vstack',
