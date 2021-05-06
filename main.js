@@ -44,7 +44,7 @@ const OPEN_IN_SAFARI = $widget.inputValue === 'open-in-safari';
                 return {
                     type: 'zstack',
                     views: [
-                        renderBackground(),
+                        renderBackground(ctx),
                         {
                             type: 'text',
                             props: { text: '加载中...', font: $font(35) },
@@ -66,7 +66,7 @@ const OPEN_IN_SAFARI = $widget.inputValue === 'open-in-safari';
                         : getLinkOpenedInJSBox(link),
                 },
                 views: [
-                    renderBackground(),
+                    renderBackground(ctx),
                     renderUpdatingTime(date, ctx),
                     renderHotNews(items, itemPerColumn, numColumn),
                 ],
@@ -75,17 +75,50 @@ const OPEN_IN_SAFARI = $widget.inputValue === 'open-in-safari';
     });
 })();
 
-function renderBackground() {
+function renderBackgroundGradient() {
     return {
         type: 'gradient',
         props: {
             startPoint: $point(0, 0),
-            endPoint: $point(1, 1),
+            endPoint: $point(0, 1),
             colors: [
-                $color('#FFDEE9', '#1D4350'),
-                $color('#B5FFFC', '#A43931'),
+                $color('#88E3F8', '#2F6C8C'),
+                $color('#58BFF5', '#1941A3'),
             ],
         },
+    };
+}
+
+function renderBackgroundPlatformLogo({ family, isDarkMode }) {
+    // $widget接口获取的isDarkMode始终为false，获取的family有效，但在JSBox内预览时无效
+    const size = family === 0 ? 30 : family === 1 ? 40 : 50;
+    const opacity = isDarkMode ? 0.3 : 0.15;
+    // 深色模式动态图片无效
+    const image = isDarkMode
+        ? $image('assets/icon-light.png')
+        : $image('assets/icon-dark.png');
+    return {
+        type: 'image',
+        props: {
+            opacity,
+            image,
+            resizable: true,
+            frame: {
+                width: size,
+                height: size,
+            },
+            padding: 10,
+        },
+    };
+}
+
+function renderBackground(ctx) {
+    return {
+        type: 'zstack',
+        props: {
+            alignment: $widget.alignment.bottomTrailing,
+        },
+        views: [renderBackgroundGradient(), renderBackgroundPlatformLogo(ctx)],
     };
 }
 
