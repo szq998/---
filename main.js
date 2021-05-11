@@ -13,30 +13,8 @@ const BG_CONTENT_OPACITY_DARK = 0.15;
 const OPEN_IN_SAFARI = $widget.inputValue === 'open-in-safari';
 
 (async function () {
-    let items = null;
-    let date = null;
-    try {
-        items = await doWithTimeout(getWeiboHot, 10000);
-        date = new Date();
-        $cache.setAsync({
-            key: 'data',
-            value: { items, date },
-        });
-    } catch (e) {
-        console.log(e);
-
-        const cached = await $cache.getAsync('data');
-        if (cached && cached.items && cached.date) {
-            ({ items, date } = cached);
-        }
-    }
-
-    const entry = {
-        info: items,
-        date,
-    };
     $widget.setTimeline({
-        entries: [entry],
+        entries: [await fetchEntryWithCache()],
         policy: { atEnd: true },
         render: (ctx) => {
             const {
@@ -58,10 +36,8 @@ const OPEN_IN_SAFARI = $widget.inputValue === 'open-in-safari';
                 };
             }
 
-            const [
-                itemPerColumn,
-                itemHeight,
-            ] = estimateItemPerColumnAndItemHeight(displaySize.height);
+            const [itemPerColumn, itemHeight] =
+                estimateItemPerColumnAndItemHeight(displaySize.height);
 
             const numColumn = family === 0 ? 1 : 2;
             const link = 'https://s.weibo.com/top/summary';
@@ -81,6 +57,31 @@ const OPEN_IN_SAFARI = $widget.inputValue === 'open-in-safari';
         },
     });
 })();
+
+async function getWeiboHotAndSetCache() {
+    const items = await getWeiboHot();
+    $cache.setAsync({
+        key: 'data',
+        value: { items, date: new Date() },
+    });
+    return items;
+}
+
+async function fetchEntryWithCache() {
+    let items = null;
+    let date = null;
+    try {
+        items = await doWithTimeout(getWeiboHotAndSetCache, 10000);
+        date = new Date();
+    } catch (e) {
+        console.error(e);
+        const cached = await $cache.getAsync('data');
+        if (cached && cached.items && cached.date) {
+            ({ items, date } = cached);
+        }
+    }
+    return { info: items, date };
+}
 
 function estimateItemPerColumnAndItemHeight(widgetHeight) {
     let itemPerColumn = Math.floor(widgetHeight / MIN_ITEM_HEIGHT);
